@@ -63,6 +63,10 @@ export default function App() {
   };
 
   const scrollToSection = (sectionId) => {
+    if (sectionId === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -106,14 +110,56 @@ export default function App() {
       <header className="hud-nav">
         <span className="brand-title">TARSCILLA</span>
         <nav className="hud-links">
-          <a href="#projects">Projetos</a>
-          <a href="#about">Sobre & Skills</a>
-          <a href="#contact">Contato</a>
+          <a href="#projects" className="desktop-only-link">Projetos</a>
+          <a href="#about" className="desktop-only-link">Sobre & Skills</a>
+          <a href="#contact" className="desktop-only-link">Contato</a>
           <button type="button" className="pixel-btn" onClick={cycleTheme}>
             {THEME_NAMES[currentTheme]}
           </button>
         </nav>
       </header>
+
+      <nav className="mobile-hotbar" aria-label="Menu rápido">
+        <button type="button" className="hotbar-slot" onClick={() => scrollToSection('top')}>
+          <svg viewBox="0 0 16 16" width="20" height="20" shapeRendering="crispEdges">
+            <polygon points="8,2 14,7 2,7" fill="#C85A3B" />
+            <rect x="4" y="7" width="8" height="6" fill="#B87A45" />
+            <rect x="7" y="9" width="2" height="4" fill="#5C3A21" />
+          </svg>
+          <span>Início</span>
+        </button>
+
+        <button type="button" className="hotbar-slot" onClick={() => scrollToSection('projects')}>
+          <svg viewBox="0 0 16 16" width="20" height="20" shapeRendering="crispEdges">
+            <rect x="7" y="7" width="2" height="6" fill="#4B8B42" />
+            <rect x="4" y="5" width="3" height="2" fill="#5E8C61" />
+            <rect x="9" y="4" width="3" height="2" fill="#5E8C61" />
+            <rect x="3" y="13" width="10" height="2" fill="#8B5A2B" />
+          </svg>
+          <span>Projetos</span>
+        </button>
+
+        <button type="button" className="hotbar-slot" onClick={() => scrollToSection('about')}>
+          <svg viewBox="0 0 16 16" width="20" height="20" shapeRendering="crispEdges">
+            <rect x="4" y="3" width="8" height="3" fill="#8B5A2B" />
+            <rect x="3" y="6" width="10" height="7" fill="#B87A45" />
+            <rect x="7" y="7" width="2" height="2" fill="#F4C95D" />
+          </svg>
+          <span>Sobre</span>
+        </button>
+
+        <button type="button" className="hotbar-slot" onClick={() => scrollToSection('contact')}>
+          <svg viewBox="0 0 16 16" width="20" height="20" shapeRendering="crispEdges">
+            <rect x="2" y="4" width="12" height="8" fill="#FCF8EE" />
+            <rect x="2" y="4" width="12" height="1" fill="#8B5A2B" />
+            <rect x="2" y="11" width="12" height="1" fill="#8B5A2B" />
+            <rect x="4" y="6" width="2" height="1" fill="#C85A3B" />
+            <rect x="6" y="7" width="4" height="1" fill="#C85A3B" />
+            <rect x="10" y="6" width="2" height="1" fill="#C85A3B" />
+          </svg>
+          <span>Contato</span>
+        </button>
+      </nav>
 
       <main className="container">
         <section className="hero-section">
