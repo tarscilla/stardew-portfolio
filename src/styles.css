@@ -629,34 +629,16 @@ body {
 
 @media (max-width: 768px) {
   .desktop-only-link {
-    display: none !important;
-  }
-
-  .hero-section {
-    padding-bottom: 8.5rem;
-    min-height: auto;
-  }
-
-  .hero-desc {
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-  }
-
-  .diorama-wrapper {
-    max-width: 390px;
-  }
-
-  .diorama-caption {
-    margin-top: 0.25rem;
+    display: none;
   }
 
   .footer-bar {
-    padding-bottom: 7rem;
+    padding-bottom: 6rem;
   }
 
   .mobile-hotbar {
     position: fixed;
-    bottom: 12px;
+    bottom: 14px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 40;

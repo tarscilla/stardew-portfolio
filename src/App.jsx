@@ -24,11 +24,7 @@ const FALLBACK_LIVE_PROJECTS = PROJECTS.filter((p) => p.liveUrl)
   }));
 
 export default function App() {
-  const [themeIndex, setThemeIndex] = useState(() => {
-    const saved = localStorage.getItem('portfolio-theme-index');
-    const parsed = Number(saved);
-    return !Number.isNaN(parsed) && parsed >= 0 && parsed < THEMES.length ? parsed : 0;
-  });
+  const [themeIndex, setThemeIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeSkill, setActiveSkill] = useState(SKILLS[0]);
   const [liveProjects, setLiveProjects] = useState(FALLBACK_LIVE_PROJECTS);
@@ -63,11 +59,7 @@ export default function App() {
   }, []);
 
   const cycleTheme = () => {
-    setThemeIndex((prev) => {
-      const next = (prev + 1) % THEMES.length;
-      localStorage.setItem('portfolio-theme-index', String(next));
-      return next;
-    });
+    setThemeIndex((prev) => (prev + 1) % THEMES.length);
   };
 
   const scrollToSection = (sectionId) => {
