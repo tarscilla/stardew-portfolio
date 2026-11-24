@@ -24,7 +24,12 @@ const FALLBACK_LIVE_PROJECTS = PROJECTS.filter((p) => p.liveUrl)
   }));
 
 export default function App() {
-  const [themeIndex, setThemeIndex] = useState(0);
+  const [themeIndex, setThemeIndex] = useState(() => {
+    const saved = localStorage.getItem('portfolio-theme-index');
+    if (saved === null) return 0;
+    const parsed = Number(saved);
+    return !Number.isNaN(parsed) && parsed >= 0 && parsed < THEMES.length ? parsed : 0;
+  });
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeSkill, setActiveSkill] = useState(SKILLS[0]);
   const [liveProjects, setLiveProjects] = useState(FALLBACK_LIVE_PROJECTS);
@@ -33,6 +38,11 @@ export default function App() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   const currentTheme = THEMES[themeIndex];
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-theme-index', String(themeIndex));
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }, [themeIndex, currentTheme]);
 
   useEffect(() => {
     fetch('https://api.github.com/users/tarscilla/repos?sort=updated&per_page=12')

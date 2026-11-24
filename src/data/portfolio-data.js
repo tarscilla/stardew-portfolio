@@ -71,9 +71,9 @@ export const PROJECTS = [
       'Exportação automática de documentos e capas formatadas em PDF',
       'Salvamento local de rascunhos no navegador para agilizar o uso diário'
     ],
-    stack: ['Node.js', 'Express', 'Gemini API', 'PDF'],
+    stack: ['Node.js', 'Express', 'Groq API', 'PDF'],
     repoUrl: 'https://github.com/tarscilla',
-    liveUrl: 'https://didactis.onrender.com'
+    liveUrl: 'https://tarscilla.github.io/didactis/'
   }
 ];
 
