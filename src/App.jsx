@@ -13,6 +13,13 @@ const THEME_NAMES = {
   night: 'Clima: Noite'
 };
 
+function getThemeByCurrentTime() {
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour < 17) return 0; 
+  if (hour >= 17 && hour < 19) return 1;
+  return 2;
+}
+
 const CONTACT_EMAIL = 'almeidatarscilla@gmail.com';
 
 const FALLBACK_LIVE_PROJECTS = PROJECTS.filter((p) => p.liveUrl)
@@ -23,54 +30,68 @@ const FALLBACK_LIVE_PROJECTS = PROJECTS.filter((p) => p.liveUrl)
     url: p.liveUrl
   }));
 
-export default function App() {
-  const [themeIndex, setThemeIndex] = useState(() => {
-    const saved = localStorage.getItem('portfolio-theme-index');
-    if (saved === null) return 0;
-    const parsed = Number(saved);
-    return !Number.isNaN(parsed) && parsed >= 0 && parsed < THEMES.length ? parsed : 0;
-  });
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [activeSkill, setActiveSkill] = useState(SKILLS[0]);
-  const [liveProjects, setLiveProjects] = useState(FALLBACK_LIVE_PROJECTS);
-  const [sending, setSending] = useState(false);
-  const [messageSent, setMessageSent] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-
-  const currentTheme = THEMES[themeIndex];
-
-  useEffect(() => {
-    localStorage.setItem('portfolio-theme-index', String(themeIndex));
-    document.documentElement.setAttribute('data-theme', currentTheme);
-  }, [themeIndex, currentTheme]);
-
-  useEffect(() => {
-    fetch('https://api.github.com/users/tarscilla/repos?sort=updated&per_page=12')
-      .then((response) => response.json())
-      .then((repos) => {
-        if (!Array.isArray(repos)) return;
-
-        const deployed = repos
-          .filter((repo) => repo.homepage && repo.homepage.trim() !== '' && !repo.fork)
-          .slice(0, 1)
-          .map((repo) => ({
-            id: repo.id,
-            name: repo.name,
-            url: repo.homepage.startsWith('http')
-              ? repo.homepage
-              : `https://${repo.homepage}`
-          }));
-
-        if (deployed.length > 0) {
-          setLiveProjects(deployed);
+  export default function App() {
+    const [themeIndex, setThemeIndex] = useState(() => {
+      try {
+        const manualChoice = sessionStorage.getItem('portfolio-manual-theme');
+        if (manualChoice !== null) {
+          const parsed = Number(manualChoice);
+          if (!Number.isNaN(parsed) && parsed >= 0 && parsed < THEMES.length) {
+            return parsed;
+          }
         }
-      })
-      .catch(() => {});
-  }, []);
-
-  const cycleTheme = () => {
-    setThemeIndex((prev) => (prev + 1) % THEMES.length);
-  };
+      } catch {
+      }
+      return getThemeByCurrentTime();
+    });
+  
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [activeSkill, setActiveSkill] = useState(SKILLS[0]);
+    const [liveProjects, setLiveProjects] = useState(FALLBACK_LIVE_PROJECTS);
+    const [sending, setSending] = useState(false);
+    const [messageSent, setMessageSent] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  
+    const currentTheme = THEMES[themeIndex];
+  
+    useEffect(() => {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    }, [currentTheme]);
+  
+    useEffect(() => {
+      fetch('https://api.github.com/users/tarscilla/repos?sort=updated&per_page=12')
+        .then((response) => response.json())
+        .then((repos) => {
+          if (!Array.isArray(repos)) return;
+  
+          const deployed = repos
+            .filter((repo) => repo.homepage && repo.homepage.trim() !== '' && !repo.fork)
+            .slice(0, 1)
+            .map((repo) => ({
+              id: repo.id,
+              name: repo.name,
+              url: repo.homepage.startsWith('http')
+                ? repo.homepage
+                : `https://${repo.homepage}`
+            }));
+  
+          if (deployed.length > 0) {
+            setLiveProjects(deployed);
+          }
+        })
+        .catch(() => {});
+    }, []);
+  
+    const cycleTheme = () => {
+      setThemeIndex((prev) => {
+        const next = (prev + 1) % THEMES.length;
+        try {
+          sessionStorage.setItem('portfolio-manual-theme', String(next));
+        } catch {
+        }
+        return next;
+      });
+    };
 
   const scrollToSection = (sectionId) => {
     if (sectionId === 'top') {
